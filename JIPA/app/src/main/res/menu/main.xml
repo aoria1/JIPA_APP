@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" >
+        <menu>
+            <item
+                android:id="@+id/changecolor"
+                android:title="Change background Color"
+                >
+                <menu>
+                    <item
+                        android:id="@+id/bluebg"
+                        android:title="Blue" />
+                    <item
+                        android:id="@+id/redbg"
+                        android:title="Red" />
+                    <item
+                        android:id="@+id/greenbg"
+                        android:title="Green" />
+                </menu>
+            </item>
+            <item
+                android:id="@+id/changetextcolor"
+                android:title="Change Text Color" >
+                <menu>
+                    <item
+                        android:id="@+id/bluet"
+                        android:title="Blue" />
+                    <item
+                        android:id="@+id/redt"
+                        android:title="Red" />
+                    <item
+                        android:id="@+id/greent"
+                        android:title="Green" />
+                </menu>
+            </item>
+        </menu>
+        </item>
+</menu>
