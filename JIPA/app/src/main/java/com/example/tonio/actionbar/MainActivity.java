@@ -36,7 +36,7 @@ import retrofit2.http.GET;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, NoteCardFrag.NoteCardListener,
-        MenuFrag.MenuListener,FirstScreen.StartListener,TipsFrag.TipsListener {
+        HomeFrag.HomeListener,StartScreen.StartListener,TipsFrag.TipsListener {
     private int rand;
     private Vibrator vib;
     private int numcards;
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void ButtonsM(String button) {
+    public void ButtonsH(String button) {
         if (button.equals("notecard")) {
             ListView lv = (ListView) findViewById(R.id.question);
             lv.setVisibility(View.VISIBLE);

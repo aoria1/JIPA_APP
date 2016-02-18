@@ -11,7 +11,7 @@ import android.widget.Button;
 /**
  * Created by tonio on 2/15/2016.
  */
-public class FirstScreen extends Fragment {
+public class StartScreen extends Fragment {
     StartListener activityCommander;
 
     public interface StartListener{

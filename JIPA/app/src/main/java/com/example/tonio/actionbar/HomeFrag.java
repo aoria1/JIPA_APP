@@ -12,18 +12,18 @@ import android.widget.Button;
  * Created by tonio on 2/15/2016.
  */
 
-public class MenuFrag extends Fragment {
-   private MenuListener activityCommander;
+public class HomeFrag extends Fragment {
+   private HomeListener activityCommander;
 
-    public interface MenuListener {
-        public void ButtonsM(String button);
+    public interface HomeListener {
+        public void ButtonsH(String button);
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            activityCommander = (MenuListener) activity;
+            activityCommander = (HomeListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString());
         }
@@ -41,14 +41,14 @@ public class MenuFrag extends Fragment {
                     public void onClick(View v) {
 
 
-                        activityCommander.ButtonsM("notecard");
+                        activityCommander.ButtonsH("notecard");
                     }
                 }
         );
         t.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
-                        activityCommander.ButtonsM("tips");
+                        activityCommander.ButtonsH("tips");
                     }
                 }
         );

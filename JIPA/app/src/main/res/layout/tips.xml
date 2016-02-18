@@ -18,8 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Back"
-        android:textColor="#ffffff"
-        android:background="#737373"
+        android:textColor="#000000"
         android:id="@+id/bckTips"
         android:layout_alignParentBottom="true"
         />
@@ -28,9 +27,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Next Tip"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:id="@+id/nxtTip"
-        android:background="#737373"
         android:layout_alignTop="@+id/bckTips"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />

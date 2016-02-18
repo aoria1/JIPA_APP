@@ -15,7 +15,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="com.example.tonio.actionbar.MenuFrag"
+            android:name="com.example.tonio.actionbar.HomeFrag"
             android:id="@+id/fragment"
             android:layout_centerHorizontal="true"
             tools:layout="@layout/menu"
@@ -38,7 +38,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="com.example.tonio.actionbar.FirstScreen"
+            android:name="com.example.tonio.actionbar.StartScreen"
             android:id="@+id/fragment3"
             android:layout_centerHorizontal="true"
             tools:layout="@layout/firstscreen"

@@ -18,9 +18,8 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:text="NoteCards"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:layout_gravity="center_horizontal"
-        android:background="#737373"
         android:layout_above="@+id/tips"
         android:layout_marginBottom="44dp"
         android:layout_alignRight="@+id/imageView"
@@ -38,8 +37,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/NoteCards"
         android:layout_alignEnd="@+id/NoteCards"
-        android:textColor="#ffffff"
-        android:background="#737373"
+        android:textColor="#000000"
         android:layout_alignLeft="@+id/NoteCards"
         android:layout_alignStart="@+id/NoteCards" />
 </RelativeLayout>
