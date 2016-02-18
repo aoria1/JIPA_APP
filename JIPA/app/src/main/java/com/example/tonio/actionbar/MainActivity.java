@@ -1,7 +1,11 @@
 package com.example.tonio.actionbar;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -34,11 +38,14 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, NoteCardFrag.NoteCardListener,
         MenuFrag.MenuListener,FirstScreen.StartListener,TipsFrag.TipsListener {
     int rand;
+    private Vibrator vib;
+    private int numcards;
     private TextView text;
-    private int index = 0;
+    private int index;
     private StringBuilder finalString;
     private static ArrayList<String> lines;
     private static final String PREFS_TAG = "IndexPlace";
+    private ArrayAdapter<Object> listAdapter;
     final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://interview-app-server.herokuapp.com")
             .addConverterFactory(GsonConverterFactory.create())
@@ -82,16 +89,12 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        vib = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         View frag2 = findViewById(R.id.fragment2);
         frag2.setVisibility(View.INVISIBLE);
         View frag4 = findViewById(R.id.fragment4);
         frag4.setVisibility(View.INVISIBLE);
-
-
-
-//            View frag1 = findViewById(R.id.fragment);
-//            frag1.setVisibility(View.INVISIBLE);
+        numcards= 100;
         View frag3 = findViewById(R.id.fragment3);
         frag3.setVisibility(View.INVISIBLE);
 
@@ -111,9 +114,6 @@ public class MainActivity extends AppCompatActivity
             View frag3 = findViewById(R.id.fragment);
             frag3.setVisibility(View.INVISIBLE);
 
-//            View frag4 = findViewById(R.id.fragment4);
-//            frag4.setVisibility(View.VISIBLE);
-
         }
     }
 
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity
             ans.setVisibility(View.INVISIBLE);
 
 
-            final ArrayAdapter<Object> listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+            listAdapter = new ArrayAdapter<>(this, R.layout.custom_textview);
             Call<List<Answer>> call = service.getAnswer();
             call.enqueue(new Callback<List<Answer>>() {
                 @Override
@@ -163,16 +163,19 @@ public class MainActivity extends AppCompatActivity
             a.setVisibility(View.INVISIBLE);
             Button ans = (Button)findViewById(R.id.answerBtn);
             ans.setVisibility(View.VISIBLE);
-            rand = ((int)(Math.random() * 100)) + 1;
-            final ArrayAdapter<Object> listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+
+            rand = ((int)(Math.random() * numcards)) + 1;
+            listAdapter = new ArrayAdapter<>(this, R.layout.custom_textview);
             Call<List<Descript>> call = service.getQuestion();
+
             call.enqueue(new Callback<List<Descript>>() {
                 @Override
                 public void onResponse(Call<List<Descript>> call, Response<List<Descript>> response) {
 
                     ListView lv = (ListView) findViewById(R.id.question);
                     lv.setAdapter(listAdapter);
-                    listAdapter.addAll(response.body().get(rand));
+
+                   listAdapter.addAll(response.body().get(rand));
                 }
 
                 @Override
@@ -199,9 +202,9 @@ public class MainActivity extends AppCompatActivity
             if (ans.getVisibility() != View.VISIBLE) {
                 ans.setVisibility(View.VISIBLE);
             }
-            rand = ((int)(Math.random() * 2)) + 1;
 
-            final ArrayAdapter<Object> listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+            rand = ((int)(Math.random() * numcards)) + 1;
+            final ArrayAdapter<Object> listAdapter = new ArrayAdapter<>(this,R.layout.custom_textview);
             Call<List<Descript>> call = service.getQuestion();
             call.enqueue(new Callback<List<Descript>>() {
                 @Override
@@ -283,14 +286,39 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
+        View menu = findViewById(R.id.fragment);
+        View cards = findViewById(R.id.fragment2);
+        View tips = findViewById(R.id.fragment4);
+        TextView textl = (TextView)findViewById(R.id.tv);
+        TextView texttips = (TextView)findViewById(R.id.tiptxt);
         if (id == R.id.action_settings) {
             return true;
+        }
+        if(id == R.id.greenbg){
+
+            menu.setBackgroundColor(Color.GREEN);
+            cards.setBackgroundColor(Color.GREEN);
+            tips.setBackgroundColor(Color.GREEN);
+        }else if(id == R.id.bluebg){
+            menu.setBackgroundColor(Color.parseColor("#0066ff"));
+            cards.setBackgroundColor(Color.parseColor("#0066ff"));
+            tips.setBackgroundColor(Color.parseColor("#0066ff"));
+        }else if(id == R.id.orbg){
+            menu.setBackgroundColor(Color.parseColor("#ff751a"));
+            cards.setBackgroundColor(Color.parseColor("#ff751a"));
+            tips.setBackgroundColor(Color.parseColor("#ff751a"));
+        }
+        if(id == R.id.bluet){
+
+            textl.setTextColor(Color.parseColor("#000066"));
+            texttips.setTextColor(Color.parseColor("#000066"));
+        }else if(id==R.id.redt){
+            textl.setTextColor(Color.parseColor("#ff0000"));
+            texttips.setTextColor(Color.parseColor("#ff0000"));
+        }else if(id==R.id.greent){
+            textl.setTextColor(Color.parseColor("#00cc00"));
+            texttips.setTextColor(Color.parseColor("#00cc00"));
         }
 
         return super.onOptionsItemSelected(item);
@@ -303,15 +331,28 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.card50) {
+            vib.vibrate(50);
+            numcards = 50;
 
         } else if (id == R.id.card100) {
-
+            vib.vibrate(50);
+            numcards = 100;
         } else if (id == R.id.card150) {
-
+            vib.vibrate(50);
+            numcards = 150;
         } else if (id == R.id.card200) {
-
-        } else if (id == R.id.links) {
-
+            vib.vibrate(50);
+            numcards = 199;
+        } else if (id == R.id.tutorialP) {
+            vib.vibrate(50);
+            Uri uri = Uri.parse("http://www.tutorialspoint.com/java/");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        }else if (id == R.id.bucky) {
+            vib.vibrate(50);
+            Uri uri = Uri.parse("https://thenewboston.com/videos.php?cat=31");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

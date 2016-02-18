@@ -17,6 +17,7 @@ public class NoteCardFrag extends Fragment {
 
         public interface NoteCardListener{
             public void ButtonsNC(String button);
+
         }
 
         @Override

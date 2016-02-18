@@ -17,8 +17,8 @@
                         android:id="@+id/bluebg"
                         android:title="Blue" />
                     <item
-                        android:id="@+id/redbg"
-                        android:title="Red" />
+                        android:id="@+id/orbg"
+                        android:title="Orange" />
                     <item
                         android:id="@+id/greenbg"
                         android:title="Green" />
