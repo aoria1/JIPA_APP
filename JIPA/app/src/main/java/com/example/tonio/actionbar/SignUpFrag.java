@@ -13,7 +13,7 @@ import android.widget.TextView;
  * Created by tonio on 2/15/2016.
  */
 public class SignUpFrag extends Fragment {
-    SignUpListener activityCommander;
+   private SignUpListener activityCommander;
     public interface SignUpListener{
         public void ButtonsNC(String button);
     }

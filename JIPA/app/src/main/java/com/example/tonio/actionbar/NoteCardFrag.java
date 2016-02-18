@@ -13,7 +13,7 @@ import android.widget.Button;
  */
 public class NoteCardFrag extends Fragment {
 
-        NoteCardListener activityCommander;
+      private   NoteCardListener activityCommander;
 
         public interface NoteCardListener{
             public void ButtonsNC(String button);

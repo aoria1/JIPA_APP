@@ -15,7 +15,7 @@ public class FirstScreen extends Fragment {
     StartListener activityCommander;
 
     public interface StartListener{
-        public void ButtonsS(String button);
+        public void ButtonsFS(String button);
     }
 
     @Override
@@ -37,14 +37,14 @@ public class FirstScreen extends Fragment {
         sigBtn.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
-                        activityCommander.ButtonsS("signBtn");
+                        activityCommander.ButtonsFS("signBtn");
                     }
                 }
         );
         logBtn.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
-                        activityCommander.ButtonsS("logBtn");
+                        activityCommander.ButtonsFS("logBtn");
                     }
                 }
         );

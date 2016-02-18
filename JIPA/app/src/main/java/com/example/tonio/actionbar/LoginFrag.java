@@ -12,7 +12,7 @@ import android.widget.Button;
  * Created by tonio on 2/15/2016.
  */
 public class LoginFrag extends Fragment {
-    StartListener activityCommander;
+    private StartListener activityCommander;
 
     public interface StartListener {
         public void ButtonsL(String button);

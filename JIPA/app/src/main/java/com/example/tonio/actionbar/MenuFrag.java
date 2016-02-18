@@ -13,7 +13,7 @@ import android.widget.Button;
  */
 
 public class MenuFrag extends Fragment {
-    MenuListener activityCommander;
+   private MenuListener activityCommander;
 
     public interface MenuListener {
         public void ButtonsM(String button);

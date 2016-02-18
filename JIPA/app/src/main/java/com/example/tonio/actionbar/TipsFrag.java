@@ -12,7 +12,7 @@ import android.widget.Button;
  * Created by tonio on 2/15/2016.
  */
 public class TipsFrag extends Fragment {
-    TipsListener activityCommander;
+   private TipsListener activityCommander;
 
     public interface TipsListener{
         public void ButtonsT(String button);

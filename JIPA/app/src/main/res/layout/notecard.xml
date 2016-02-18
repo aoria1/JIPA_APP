@@ -37,6 +37,7 @@
         android:id="@+id/answerBtn"
         android:background="#737373"
         android:text="Answer"
+        android:textColor="#ffffff"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
@@ -46,6 +47,7 @@
         android:id="@+id/backBtn"
         android:background="#737373"
         android:layout_alignParentBottom="true"
+        android:textColor="#ffffff"
         android:text="Back" />
     <Button
         android:layout_width="wrap_content"
@@ -53,6 +55,7 @@
         android:id="@+id/nextqBtn"
         android:background="#737373"
         android:text="Skip Question"
+        android:textColor="#ffffff"
         android:layout_alignTop="@+id/answerBtn"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />

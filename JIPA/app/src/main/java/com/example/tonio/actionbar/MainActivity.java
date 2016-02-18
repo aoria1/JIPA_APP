@@ -37,7 +37,7 @@ import retrofit2.http.GET;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, NoteCardFrag.NoteCardListener,
         MenuFrag.MenuListener,FirstScreen.StartListener,TipsFrag.TipsListener {
-    int rand;
+    private int rand;
     private Vibrator vib;
     private int numcards;
     private TextView text;
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity
             .build();
 
     final  GitHubService service = retrofit.create(GitHubService.class);
-    private class Descript{
+    private class Question{
         public String question;
 
 
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity
     }
     public interface GitHubService {
         @GET("/api/question")
-        Call<List<Descript>> getQuestion();
+        Call<List<Question>> getQuestion();
 
         @GET("/api/question")
         Call<List<Answer>> getAnswer();
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
     @Override
-    public void ButtonsS(String button){
+    public void ButtonsFS(String button){
         if (button.equals("logBtn")) {
             View frag3 = findViewById(R.id.fragment);
             frag3.setVisibility(View.INVISIBLE);
@@ -166,11 +166,11 @@ public class MainActivity extends AppCompatActivity
 
             rand = ((int)(Math.random() * numcards)) + 1;
             listAdapter = new ArrayAdapter<>(this, R.layout.custom_textview);
-            Call<List<Descript>> call = service.getQuestion();
+            Call<List<Question>> call = service.getQuestion();
 
-            call.enqueue(new Callback<List<Descript>>() {
+            call.enqueue(new Callback<List<Question>>() {
                 @Override
-                public void onResponse(Call<List<Descript>> call, Response<List<Descript>> response) {
+                public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
 
                     ListView lv = (ListView) findViewById(R.id.question);
                     lv.setAdapter(listAdapter);
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 @Override
-                public void onFailure(Call<List<Descript>> call, Throwable t) {
+                public void onFailure(Call<List<Question>> call, Throwable t) {
 
                 }
             });
@@ -205,10 +205,10 @@ public class MainActivity extends AppCompatActivity
 
             rand = ((int)(Math.random() * numcards)) + 1;
             final ArrayAdapter<Object> listAdapter = new ArrayAdapter<>(this,R.layout.custom_textview);
-            Call<List<Descript>> call = service.getQuestion();
-            call.enqueue(new Callback<List<Descript>>() {
+            Call<List<Question>> call = service.getQuestion();
+            call.enqueue(new Callback<List<Question>>() {
                 @Override
-                public void onResponse(Call<List<Descript>> call, Response<List<Descript>> response) {
+                public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
 
                     ListView lv = (ListView) findViewById(R.id.question);
                     lv.setAdapter(listAdapter);
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 @Override
-                public void onFailure(Call<List<Descript>> call, Throwable t) {
+                public void onFailure(Call<List<Question>> call, Throwable t) {
 
                 }
             });
@@ -295,30 +295,30 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-        if(id == R.id.greenbg){
+        if(id == R.id.black){
 
-            menu.setBackgroundColor(Color.GREEN);
-            cards.setBackgroundColor(Color.GREEN);
-            tips.setBackgroundColor(Color.GREEN);
+            menu.setBackgroundColor(Color.parseColor("#222930"));
+            cards.setBackgroundColor(Color.parseColor("#222930"));
+            tips.setBackgroundColor(Color.parseColor("#222930"));
         }else if(id == R.id.bluebg){
             menu.setBackgroundColor(Color.parseColor("#0066ff"));
             cards.setBackgroundColor(Color.parseColor("#0066ff"));
             tips.setBackgroundColor(Color.parseColor("#0066ff"));
-        }else if(id == R.id.orbg){
-            menu.setBackgroundColor(Color.parseColor("#ff751a"));
-            cards.setBackgroundColor(Color.parseColor("#ff751a"));
-            tips.setBackgroundColor(Color.parseColor("#ff751a"));
+        }else if(id == R.id.khaki){
+            menu.setBackgroundColor(Color.parseColor("#e4dbbf"));
+            cards.setBackgroundColor(Color.parseColor("#e4dbbf"));
+            tips.setBackgroundColor(Color.parseColor("#e4dbbf"));
         }
         if(id == R.id.bluet){
 
-            textl.setTextColor(Color.parseColor("#000066"));
-            texttips.setTextColor(Color.parseColor("#000066"));
-        }else if(id==R.id.redt){
-            textl.setTextColor(Color.parseColor("#ff0000"));
-            texttips.setTextColor(Color.parseColor("#ff0000"));
-        }else if(id==R.id.greent){
-            textl.setTextColor(Color.parseColor("#00cc00"));
-            texttips.setTextColor(Color.parseColor("#00cc00"));
+            textl.setTextColor(Color.parseColor("#4eb1ba"));
+            texttips.setTextColor(Color.parseColor("#4eb1ba"));
+        }else if(id==R.id.white){
+            textl.setTextColor(Color.parseColor("#ffffff"));
+            texttips.setTextColor(Color.parseColor("#ffffff"));
+        }else if(id==R.id.orange){
+            textl.setTextColor(Color.parseColor("#dc5b21"));
+            texttips.setTextColor(Color.parseColor("#dc5b21"));
         }
 
         return super.onOptionsItemSelected(item);

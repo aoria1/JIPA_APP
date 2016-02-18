@@ -17,11 +17,11 @@
                         android:id="@+id/bluebg"
                         android:title="Blue" />
                     <item
-                        android:id="@+id/orbg"
-                        android:title="Orange" />
+                        android:id="@+id/black"
+                        android:title="Black" />
                     <item
-                        android:id="@+id/greenbg"
-                        android:title="Green" />
+                        android:id="@+id/khaki"
+                        android:title="Khaki" />
                 </menu>
             </item>
             <item
@@ -32,11 +32,11 @@
                         android:id="@+id/bluet"
                         android:title="Blue" />
                     <item
-                        android:id="@+id/redt"
-                        android:title="Red" />
+                        android:id="@+id/white"
+                        android:title="White" />
                     <item
-                        android:id="@+id/greent"
-                        android:title="Green" />
+                        android:id="@+id/orange"
+                        android:title="Orange" />
                 </menu>
             </item>
         </menu>
