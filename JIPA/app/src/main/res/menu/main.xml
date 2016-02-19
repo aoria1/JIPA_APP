@@ -9,36 +9,21 @@
         app:showAsAction="never" >
         <menu>
             <item
-                android:id="@+id/changecolor"
-                android:title="Change background Color"
+
+                android:title="Select Color Theme"
                 >
                 <menu>
                     <item
-                        android:id="@+id/bluebg"
-                        android:title="Blue" />
+                        android:id="@+id/blueT"
+                        android:title="Default Theme" />
                     <item
-                        android:id="@+id/black"
-                        android:title="Black" />
+                        android:id="@+id/blackT"
+                        android:title="Dark Side Theme" />
                     <item
-                        android:id="@+id/khaki"
-                        android:title="Khaki" />
-                </menu>
-            </item>
-            <item
-                android:id="@+id/changetextcolor"
-                android:title="Change Text Color" >
-                <menu>
-                    <item
-                        android:id="@+id/bluet"
-                        android:title="Blue" />
-                    <item
-                        android:id="@+id/white"
-                        android:title="White" />
-                    <item
-                        android:id="@+id/orange"
-                        android:title="Orange" />
-                </menu>
-            </item>
-        </menu>
+                        android:id="@+id/khakiT"
+                        android:title="Monster Theme" />
+               </menu>
         </item>
+            </menu>
+    </item>
 </menu>

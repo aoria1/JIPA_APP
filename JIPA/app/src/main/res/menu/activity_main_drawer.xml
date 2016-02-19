@@ -4,7 +4,7 @@
 
     <group android:checkableBehavior="single">
 
-    <item android:title="Number of Cards:">
+    <item android:title="Number of NoteCard Questions:">
         <menu>
             <item
                 android:id="@+id/card50"

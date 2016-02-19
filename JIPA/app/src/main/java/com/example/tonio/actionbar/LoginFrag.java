@@ -12,9 +12,9 @@ import android.widget.Button;
  * Created by tonio on 2/15/2016.
  */
 public class LoginFrag extends Fragment {
-    private StartListener activityCommander;
+    private LogListener activityCommander;
 
-    public interface StartListener {
+    public interface LogListener {
         public void ButtonsL(String button);
     }
 
@@ -22,7 +22,7 @@ public class LoginFrag extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            activityCommander = (StartListener) activity;
+            activityCommander = (LogListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString());
         }

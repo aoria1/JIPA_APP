@@ -46,12 +46,12 @@ public class MainActivity extends AppCompatActivity
     private static ArrayList<String> lines;
     private static final String PREFS_TAG = "IndexPlace";
     private ArrayAdapter<Object> listAdapter;
-    final Retrofit retrofit = new Retrofit.Builder()
+   private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://interview-app-server.herokuapp.com")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-    final  GitHubService service = retrofit.create(GitHubService.class);
+   private  final  GitHubService service = retrofit.create(GitHubService.class);
     private class Question{
         public String question;
 
@@ -295,31 +295,27 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-        if(id == R.id.black){
+        if(id == R.id.blackT){
 
             menu.setBackgroundColor(Color.parseColor("#222930"));
             cards.setBackgroundColor(Color.parseColor("#222930"));
             tips.setBackgroundColor(Color.parseColor("#222930"));
-        }else if(id == R.id.bluebg){
+            textl.setTextColor(Color.parseColor("#4eb1ba"));
+            texttips.setTextColor(Color.parseColor("#4eb1ba"));
+        }else if(id == R.id.blueT){
             menu.setBackgroundColor(Color.parseColor("#0066ff"));
             cards.setBackgroundColor(Color.parseColor("#0066ff"));
             tips.setBackgroundColor(Color.parseColor("#0066ff"));
-        }else if(id == R.id.khaki){
+            textl.setTextColor(Color.parseColor("#ffffff"));
+            texttips.setTextColor(Color.parseColor("#ffffff"));
+        }else if(id == R.id.khakiT){
             menu.setBackgroundColor(Color.parseColor("#e4dbbf"));
             cards.setBackgroundColor(Color.parseColor("#e4dbbf"));
             tips.setBackgroundColor(Color.parseColor("#e4dbbf"));
-        }
-        if(id == R.id.bluet){
-
-            textl.setTextColor(Color.parseColor("#4eb1ba"));
-            texttips.setTextColor(Color.parseColor("#4eb1ba"));
-        }else if(id==R.id.white){
-            textl.setTextColor(Color.parseColor("#ffffff"));
-            texttips.setTextColor(Color.parseColor("#ffffff"));
-        }else if(id==R.id.orange){
             textl.setTextColor(Color.parseColor("#dc5b21"));
             texttips.setTextColor(Color.parseColor("#dc5b21"));
         }
+
 
         return super.onOptionsItemSelected(item);
     }
