@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -651,24 +652,48 @@ public class MainActivity extends AppCompatActivity
             // Get the layout inflater
             LayoutInflater inflater = this.getLayoutInflater();
            // newFeedback feedback = newFeedback
-           final View layout = View.inflate(this, R.layout.dialog_feedback, null);
-           final  EditText savedText =(EditText)layout.findViewById(R.id.feedbcktxt);
+
+
+            final EditText input = new EditText(MainActivity.this);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
+            input.setLayoutParams(lp);
             // Inflate and set the layout for the dialog
             // Pass null as the parent view because its going in the dialog layout
-            builder.setView(inflater.inflate(R.layout.dialog_feedback, null))
+            builder.setTitle("FeedBack")
+                    .setView(input)
                     // Add action buttons
                     .setPositiveButton("Send", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
 
+                            String inputfb = input.getText().toString();
+                            newFeedback feedback = new newFeedback(inputfb,currentID,false,false);
+                            Call<newFeedback> call = service.createFeedback(feedback);
+                            call.enqueue(new Callback<newFeedback>() {
+                                @Override
+                                public void onResponse(Call<newFeedback> call, Response<newFeedback> response) {
 
-                            String myString = savedText.getText().toString();
+                                    Context context = getApplicationContext();
+                                    CharSequence text = "FeedBack Sent";
+                                    int duration = Toast.LENGTH_SHORT;
+                                    Toast toast = Toast.makeText(context, text, duration);
+                                    toast.show();
 
-                            Context context = getApplicationContext();
-                            CharSequence text = myString;
-                            int duration = Toast.LENGTH_SHORT;
-                            Toast toast = Toast.makeText(context, text, duration);
-                            toast.show();
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<newFeedback> call, Throwable t) {
+                                    Context context = getApplicationContext();
+                                    CharSequence text = "FeedBack Not Sent";
+                                    int duration = Toast.LENGTH_SHORT;
+                                    Toast toast = Toast.makeText(context, text, duration);
+                                    toast.show();
+                                }
+                            });
+
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
