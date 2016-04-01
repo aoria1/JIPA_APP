@@ -2,6 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_search"
+        android:title="@string/action_search"
+        app:showAsAction="always"
+        android:icon="@android:drawable/ic_menu_search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+       ></item>
+    <item
 
         android:id="@+id/action_settings"
         android:orderInCategory="100"
@@ -9,7 +16,6 @@
         app:showAsAction="never" >
         <menu>
             <item
-
                 android:title="Select Color Theme"
                 >
                 <menu>
@@ -24,6 +30,13 @@
                         android:title="Monster Theme" />
                </menu>
         </item>
+            <item android:title="Send Feedback"
+                android:id="@+id/feedback"
+                ></item>
+            <item android:title="Log Out"
+                android:id="@+id/logout"
+                ></item>
+
             </menu>
     </item>
 </menu>

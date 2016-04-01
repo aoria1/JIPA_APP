@@ -32,4 +32,35 @@
         android:layout_alignTop="@+id/bckTips"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Details"
+        android:id="@+id/details"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="500dp"
+        android:layout_height="500dp"
+        android:id="@+id/textDetails"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/bckTips" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back To Tips"
+        android:id="@+id/backToTipsButton"
+        android:layout_below="@+id/textDetails"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

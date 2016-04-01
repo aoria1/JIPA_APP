@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#0066ff">
-    <ListView
 
+    <ListView
         android:id="@+id/question"
         android:layout_width="200dp"
         android:gravity="center"
@@ -14,7 +16,6 @@
         android:layout_alignEnd="@+id/nextqBtn"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
         android:layout_above="@+id/answerBtn" />
 
     <ListView
@@ -26,11 +27,10 @@
         android:textAlignment="center"
         android:layout_above="@+id/answerBtn"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        />
+        android:layout_alignParentStart="true" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,4 +56,39 @@
         android:layout_alignTop="@+id/answerBtn"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/likebtn"
+       android:src="@drawable/thumbs24"
+        android:background="#0066ff"
+        android:scaleType="centerInside"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dislikebtn"
+        android:src="@drawable/thumbsdown"
+        android:background="#0066ff"
+        android:scaleType="centerInside"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/likebtn"
+        android:layout_toEndOf="@+id/likebtn" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        app:backgroundTint="#ccc"
+        android:src="@drawable/ic_favorite_border_white_24dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/nextqBtn"
+        android:layout_alignEnd="@+id/nextqBtn" />
 </RelativeLayout>

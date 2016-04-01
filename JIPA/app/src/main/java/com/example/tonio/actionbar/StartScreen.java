@@ -15,7 +15,7 @@ public class StartScreen extends Fragment {
     StartListener activityCommander;
 
     public interface StartListener{
-        public void ButtonsFS(String button);
+        public void StartScreenButtons(String button);
     }
 
     @Override
@@ -37,14 +37,14 @@ public class StartScreen extends Fragment {
         sigBtn.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
-                        activityCommander.ButtonsFS("signBtn");
+                        activityCommander.StartScreenButtons("signBtn");
                     }
                 }
         );
         logBtn.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
-                        activityCommander.ButtonsFS("logBtn");
+                        activityCommander.StartScreenButtons("logBtn");
                     }
                 }
         );

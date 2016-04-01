@@ -7,30 +7,60 @@
     tools:context="com.example.tonio.actionbar.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.example.tonio.actionbar.SignUpScreen"
+        android:id="@+id/fragsign"
+        android:layout_centerHorizontal="true"
+        tools:layout="@layout/signup"
+        android:layout_alignParentTop="true" />
+    <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.example.tonio.actionbar.LoginScreen"
+        android:id="@+id/fraglogin"
+        android:layout_centerHorizontal="true"
+        tools:layout="@layout/login"
+        android:layout_alignParentTop="true" />
+    <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.example.tonio.actionbar.QuizScreen"
+        android:id="@+id/quizF"
+        android:layout_centerHorizontal="true"
+        tools:layout="@layout/quiz"
+         />
 
 
-        <fragment
+    <fragment
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="com.example.tonio.actionbar.HomeFrag"
-            android:id="@+id/fragment"
+            android:name="com.example.tonio.actionbar.HomeInterface"
+            android:id="@+id/fragmenu"
             android:layout_centerHorizontal="true"
             tools:layout="@layout/menu"
-            android:layout_alignTop="@+id/fragment2" />
+            android:layout_alignTop="@+id/fragnotecard" />
         <fragment
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="com.example.tonio.actionbar.NoteCardFrag"
-            android:id="@+id/fragment2"
+            android:name="com.example.tonio.actionbar.NoteCardInterface"
+            android:id="@+id/fragnotecard"
             android:layout_centerHorizontal="true"
             tools:layout="@layout/notecard"
-            android:layout_alignTop="@+id/fragment3" />
+            android:layout_alignTop="@+id/fragfscreen" />
 
         <fragment
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -39,27 +69,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:name="com.example.tonio.actionbar.StartScreen"
-            android:id="@+id/fragment3"
+            android:id="@+id/fragfscreen"
             android:layout_centerHorizontal="true"
             tools:layout="@layout/firstscreen"
-            android:layout_alignTop="@+id/fragment4" />
+            android:layout_alignTop="@+id/fragtips" />
         <fragment
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="com.example.tonio.actionbar.TipsFrag"
-            android:id="@+id/fragment4"
+            android:name="com.example.tonio.actionbar.TipsScreen"
+            android:id="@+id/fragtips"
             tools:layout="@layout/tips"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/tv"
-        android:textColor="#ffffff"
-        android:layout_width="fill_parent"
-        android:gravity="center"
-        android:textSize="20dp"
-        android:layout_height="fill_parent"/>
+
 </RelativeLayout>
