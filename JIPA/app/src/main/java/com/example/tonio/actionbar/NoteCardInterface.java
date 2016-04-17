@@ -26,7 +26,7 @@ public class NoteCardInterface extends Fragment {
 
 
         public interface NoteCardListener{
-            public void NoteCardInterfaceButtons(String button);
+            public void NoteCardInterfaceButtons(String button, int check);
 
         }
 
@@ -53,7 +53,7 @@ public class NoteCardInterface extends Fragment {
             fav.setOnClickListener(
                     new View.OnClickListener() {
                         public void onClick(View v) {
-                            activityCommander.NoteCardInterfaceButtons("fav");
+                            activityCommander.NoteCardInterfaceButtons("fav",0);
                             if(fav.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.ic_favorite_border_blue_24dp).getConstantState()){
                                 fav.setImageResource(R.drawable.ic_favorite_blue_24dp);
 
@@ -68,7 +68,7 @@ public class NoteCardInterface extends Fragment {
                     new View.OnClickListener() {
                         public void onClick(View v) {
 
-                            activityCommander.NoteCardInterfaceButtons("like");
+                            activityCommander.NoteCardInterfaceButtons("like",checklike);
                             like.setImageResource(R.drawable.thumbsupgreen);
                             checkImage = true;
                             if(checklike == 1){
@@ -89,7 +89,7 @@ public class NoteCardInterface extends Fragment {
             dislike.setOnClickListener(
                     new View.OnClickListener() {
                         public void onClick(View v) {
-                            activityCommander.NoteCardInterfaceButtons("dislike");
+                            activityCommander.NoteCardInterfaceButtons("dislike",checkdislike);
                             dislike.setImageResource(R.drawable.thumbsdownred);
                             checkImage = true;
                             if(checkdislike == 1){
@@ -110,14 +110,14 @@ public class NoteCardInterface extends Fragment {
             answer.setOnClickListener(
                     new View.OnClickListener() {
                         public void onClick(View v) {
-                            activityCommander.NoteCardInterfaceButtons("answerBtn");
+                            activityCommander.NoteCardInterfaceButtons("answerBtn",0);
                         }
                     }
             );
             back.setOnClickListener(
                     new View.OnClickListener() {
                         public void onClick(View v) {
-                            activityCommander.NoteCardInterfaceButtons("backBtn");
+                            activityCommander.NoteCardInterfaceButtons("backBtn,",0);
 
                         }
                     }
@@ -126,7 +126,7 @@ public class NoteCardInterface extends Fragment {
             next.setOnClickListener(
                     new View.OnClickListener() {
                         public void onClick(View v) {
-                            activityCommander.NoteCardInterfaceButtons("nextBtn");
+                            activityCommander.NoteCardInterfaceButtons("nextBtn",0);
 
                         }
                     }
@@ -134,7 +134,7 @@ public class NoteCardInterface extends Fragment {
             search.setOnClickListener(
                     new View.OnClickListener() {
                         public void onClick(View v) {
-                            activityCommander.NoteCardInterfaceButtons("search");
+                            activityCommander.NoteCardInterfaceButtons("search",0);
 
                         }
                     }

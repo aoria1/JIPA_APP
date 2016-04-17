@@ -459,7 +459,7 @@ public class MainActivity extends AppCompatActivity
             }
     }
     @Override
-    public void NoteCardInterfaceButtons(String button) {
+    public void NoteCardInterfaceButtons(String button,int check) {
 
         if (button.equals("answerBtn")) {
             TextView lv = (TextView) findViewById(R.id.question);
@@ -568,42 +568,71 @@ public class MainActivity extends AppCompatActivity
         }else if (button.equals("like")){
             vib.vibrate(50);
 
-            Call<Question> call = service.liked(currentQID,currentID,true,false);
-            call.enqueue(new Callback<Question>() {
-                @Override
-                public void onResponse(Call<Question> call, Response<Question> response) {
-                    Context context = getApplicationContext();
-                    CharSequence text = "check "+ call.request();
-                    int duration = Toast.LENGTH_LONG;
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
+
+                if(check==0) {
+                    Call<Question> call = service.liked(currentQID, currentID, true, false);
+                    call.enqueue(new Callback<Question>() {
+                        @Override
+                        public void onResponse(Call<Question> call, Response<Question> response) {
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<Question> call, Throwable t) {
+
+                        }
+                    });
+                }else{
+                    Call<Question> call = service.liked(currentQID, currentID, false, false);
+                    call.enqueue(new Callback<Question>() {
+                        @Override
+                        public void onResponse(Call<Question> call, Response<Question> response) {
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<Question> call, Throwable t) {
+
+                        }
+                    });
                 }
 
-                @Override
-                public void onFailure(Call<Question> call, Throwable t) {
 
-                }
-            });
+
 
         }else if (button.equals("dislike")){
             vib.vibrate(50);
 
-            Call<Question> call = service.liked(currentQID, currentID, false, true);
-            call.enqueue(new Callback<Question>() {
-                @Override
-                public void onResponse(Call<Question> call, Response<Question> response) {
-                    Context context = getApplicationContext();
-                    CharSequence text = "check ";
-                    int duration = Toast.LENGTH_LONG;
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-                }
 
-                @Override
-                public void onFailure(Call<Question> call, Throwable t) {
+            if(check==0) {
+                Call<Question> call = service.liked(currentQID, currentID, false, true);
+                call.enqueue(new Callback<Question>() {
+                    @Override
+                    public void onResponse(Call<Question> call, Response<Question> response) {
 
-                }
-            });
+                    }
+
+                    @Override
+                    public void onFailure(Call<Question> call, Throwable t) {
+
+                    }
+                });
+            }else{
+                Call<Question> call = service.liked(currentQID, currentID, false, false);
+                call.enqueue(new Callback<Question>() {
+                    @Override
+                    public void onResponse(Call<Question> call, Response<Question> response) {
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Question> call, Throwable t) {
+
+                    }
+                });
+            }
+
+
 
         }else if (button.equals("fav")){
             vib.vibrate(50);
@@ -633,6 +662,7 @@ public class MainActivity extends AppCompatActivity
                 call.enqueue(new Callback<Question>() {
                     @Override
                     public void onResponse(Call<Question> call, Response<Question> response) {
+
 
 
                     }
