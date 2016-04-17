@@ -12,6 +12,16 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:name="com.example.tonio.actionbar.SearchInterface"
+        android:id="@+id/searchPage"
+        android:layout_centerHorizontal="true"
+        tools:layout="@layout/search_interface"
+        android:layout_alignParentTop="true" />
+    <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:name="com.example.tonio.actionbar.SignUpScreen"
         android:id="@+id/fragsign"
         android:layout_centerHorizontal="true"
@@ -39,7 +49,16 @@
          />
 
 
-
+    <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.example.tonio.actionbar.QuizScoreScreen"
+        android:id="@+id/quizScore"
+        android:layout_centerHorizontal="true"
+        tools:layout="@layout/quiz_score"
+        />
     <fragment
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"

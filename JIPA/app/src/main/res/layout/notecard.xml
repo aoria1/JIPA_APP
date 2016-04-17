@@ -5,31 +5,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#0066ff">
 
-    <ListView
+
+
+    <TextView
         android:id="@+id/question"
         android:layout_width="200dp"
         android:gravity="center"
         android:textStyle="bold"
         android:layout_height="200dp"
         android:textAlignment="center"
-        android:layout_alignRight="@+id/nextqBtn"
-        android:layout_alignEnd="@+id/nextqBtn"
+        android:textColor="#ffff"
+        android:textSize="20dp"
+        android:layout_below="@+id/fab"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/answerBtn" />
-
-    <ListView
-        android:id="@+id/answer"
-        android:layout_width="200dp"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:layout_height="200dp"
-        android:textAlignment="center"
         android:layout_above="@+id/answerBtn"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignRight="@+id/nextqBtn"
+        android:layout_alignEnd="@+id/nextqBtn" />
+
 
     <Button
         android:layout_width="wrap_content"
@@ -38,47 +31,64 @@
         android:text="Show Answer"
         android:textColor="#000000"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_toRightOf="@+id/backBtn"
+        android:layout_toEndOf="@+id/backBtn"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/backBtn"
-        android:layout_alignParentBottom="true"
         android:textColor="#000000"
-        android:text="Back" />
+        android:text="Back"
+        android:layout_below="@+id/question"
+        android:layout_alignRight="@+id/dislikebtn"
+        android:layout_alignEnd="@+id/dislikebtn" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/nextqBtn"
         android:text="Skip Question"
         android:textColor="#000000"
-        android:layout_alignTop="@+id/answerBtn"
+        android:layout_below="@+id/question"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/likebtn"
-       android:src="@drawable/thumbs24"
+        android:id="@+id/searchbtn"
+        android:src="@android:drawable/ic_menu_search"
         android:background="#0066ff"
         android:scaleType="centerInside"
         android:layout_weight="1"
         android:padding="5dp"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/fab"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/likebtn"
+        android:src="@drawable/thumbsup"
+        android:background="#0066ff"
+        android:scaleType="centerInside"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:layout_below="@+id/inputSearch"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/dislikebtn"
-        android:src="@drawable/thumbsdown"
         android:background="#0066ff"
         android:scaleType="centerInside"
+        android:src="@drawable/thumbsdown"
         android:layout_weight="1"
         android:padding="5dp"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/inputSearch"
         android:layout_toRightOf="@+id/likebtn"
         android:layout_toEndOf="@+id/likebtn" />
     <android.support.design.widget.FloatingActionButton
@@ -87,8 +97,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center|top"
         app:backgroundTint="#ccc"
-        android:src="@drawable/ic_favorite_border_white_24dp"
-        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_favorite_border_blue_24dp"
+        android:layout_below="@+id/inputSearch"
         android:layout_alignRight="@+id/nextqBtn"
         android:layout_alignEnd="@+id/nextqBtn" />
 </RelativeLayout>

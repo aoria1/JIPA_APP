@@ -1,7 +1,6 @@
 package com.example.tonio.actionbar;
 
 import android.app.AlertDialog;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,24 +9,32 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.tonio.actionbar.SearchInterface.SearchListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,7 +42,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,31 +50,57 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, NoteCardInterface.NoteCardListener,
         HomeInterface.HomeListener,StartScreen.StartListener,TipsScreen.TipsListener,LoginScreen.LogListener,
-        SignUpScreen.SignUpListener,QuizScreen.QuizListener {
-    private int rand;
+        SignUpScreen.SignUpListener,QuizScreen.QuizListener,QuizScoreScreen.QuizScoreListener,SearchListener {
+
     private int userNum;
+    private int quizCount =0;
+    private int wrongCount = 2;
+    private int score = 0;
     private String [] currentIDList = new String[20];
     private String currentID;
+    private String currentEmail;
+    private int userPoints;
     private Vibrator vib;
     private int numcards;
     private TextView tipsText;
     private TextView detailsText;
     private static ArrayList<String> detailsTxtLines;
+    private boolean infavorites = false;
     private int index;
+    private int bookmarkCount;
+    int likedcount;
+    int dislikescount;
     private int numOfUsers;
+    private EditText inputSearch;
+    private ListView noteSearchList;
+    private ArrayAdapter<String> adapter;
     private StringBuilder finalStringTips;
     private StringBuilder finalStringDetails;
     private static ArrayList<String> tipsTxtLines;
     private static final String PREFS_TAG = "IndexPlace";
-    private ArrayAdapter<Object> listAdapter;
+    private String[] noteCardAnswerList =  new String[198];
+    private String[] noteCardsList = new String[198];
+    private String[] noteCardsID = new String[198];
+    private String[] bookmarkList = new String[198];
+    private String currentQID;
+    private String[] quizList = new String[10];
+    private String[] quizAnswer = new String[10];
+    private String[] wrongChoicesList = new String[30];
     private String[]emailList = new String[20];
     private String[]passwordList = new String[20];
+    private String[] likelist = new String[198];
+    private String[] dislikelist = new String[198];
+    private  Random rand = new Random();
+    private int place;
     private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://jipa-server.herokuapp.com")
             .addConverterFactory(GsonConverterFactory.create())
@@ -77,27 +110,8 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    public class likes{
-        private int likes;
 
-
-        public likes(int likes){
-            this.likes = likes;
-
-        }
-
-    }
-    public class dislikes{
-        private int dislikes;
-
-
-        public dislikes(int dislikes){
-            this.dislikes = dislikes;
-
-        }
-
-    }
-    public  class newUser{
+    private  class newUser{
 
         private String firstname;
         private String lastname;
@@ -116,7 +130,6 @@ public class MainActivity extends AppCompatActivity
             this.points = points;
         }
     }
-
     private class newFeedback{
 
         public String description;
@@ -132,32 +145,52 @@ public class MainActivity extends AppCompatActivity
             this.done = done;
         }
     }
-
     private class Question{
-        public String question;
-        public String _id;
-        public String answer;
-        public String keywords;
-        public boolean quiz;
-        public Question(String question,boolean quiz,String _id,String answer,String keywords){
+        private String _id;
+        private String question;
+        private String answer;
+        private boolean quiz;
+        private String [] wrong_choices;
+        private ArrayList<String> likes;
+        private ArrayList<String> dislikes;
+        private ArrayList<String> bookmark;
+        private String [] keyword;
+        public Question(String _id,String question,String answer,boolean quiz, String [] wrong_choices,ArrayList<String> likes,
+                        ArrayList<String> dislikes, ArrayList<String> bookmark,String[]keyword){
+            this._id = _id;
             this.question = question;
             this.quiz = quiz;
-            this._id = _id;
             this.answer = answer;
-            this.keywords = keywords;
+            this.keyword = keyword;
+            this.wrong_choices = wrong_choices;
+            this.likes = likes;
+            this.dislikes = dislikes;
+            this.bookmark = bookmark;
+
         }
     }
     private class User {
         public String _id;
-        public String email;
+        public String firstname;
+        public String lastname;
         public String password;
+        public String email;
         public int points;
+        public ArrayList<String> likes;
+        public ArrayList<String> dislikes;
+        public ArrayList<String>bookmark;
 
-        public User(String _id, String email,String password, int points){
+        public User(String _id, String firstname, String lastname,String password,String email,int points,
+                    ArrayList<String> likes, ArrayList<String> dislikes, ArrayList<String> bookmark ){
             this._id = _id;
-            this.email = email;
+            this.firstname = firstname;
+            this.lastname = lastname;
             this.password = password;
+            this.email = email;
             this.points = points;
+            this.likes = likes;
+            this.dislikes = dislikes;
+            this.bookmark = bookmark;
         }
     }
 
@@ -168,18 +201,26 @@ public class MainActivity extends AppCompatActivity
         @GET("api/user")
         Call<List<User>> getUser();
 
+        @FormUrlEncoded
+        @POST("api/user")
+        Call<List<User>> addpoints(@Field("points")int points);
+
+        @FormUrlEncoded
+        @POST("api/question/{id}/bookmark")
+        Call<Question> bookmarked(@Path("id")String quesiontID,@Field("user")String userid,@Field("bookmark")boolean bookmark);
+
+        @FormUrlEncoded
+        @POST("api/question/{id}/like")
+        Call<Question> liked(@Path("id")String quesiontID,@Field("user")String userid,@Field("like")boolean likes,@Field("dislike")boolean dislikes);
+
+
         @GET("/api/question")
         Call<List<Question>> getQuestion();
-
 
         @POST("/api/user")
        Call<newUser> createUser(@Body newUser user);
 
-        @GET("/api/question/{likes}")
-        Call<likes>addlike();
 
-        @GET("/api/question/{disklikes}")
-        Call<dislikes>adddislike();
 
     }
     @Override
@@ -190,42 +231,67 @@ public class MainActivity extends AppCompatActivity
         toolbar.setVisibility(View.INVISIBLE);
         setSupportActionBar(toolbar);
 
-
-
         View firstScreen = findViewById(R.id.fragfscreen);
         firstScreen.setVisibility(View.VISIBLE);
 
-
-        View noteCard = findViewById(R.id.fragnotecard);
-        noteCard.setVisibility(View.INVISIBLE);
-
-        View menu = findViewById(R.id.fragmenu);
-        menu.setVisibility(View.INVISIBLE);
-
-        View tips = findViewById(R.id.fragtips);
-        tips.setVisibility(View.INVISIBLE);
-
-        View loginScreen = findViewById(R.id.fraglogin);
-        loginScreen.setVisibility(View.INVISIBLE);
-
-        View signUp = findViewById(R.id.fragsign);
-        signUp.setVisibility(View.INVISIBLE);
-
-        View quiz = findViewById(R.id.quizF);
-        quiz.setVisibility(View.INVISIBLE);
-
+        hideAllScreens();
         vib = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        numcards= 100;
-        rand = ((int)(Math.random() * numcards)) + 1;
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        bookmarkCount =0;
+        numcards = 198;
+        place = rand.nextInt(numcards);
 
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
         navigationView.setNavigationItemSelectedListener(this);
+
+        Call<List<Question>> call2 = service.getQuestion();
+        call2.enqueue(new Callback<List<Question>>() {
+            @Override
+            public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
+                int numberofCards = response.body().size();
+                int quizCount = 0;
+                int wrongCCount = 0;
+                int count = 0;
+                int i =0;
+
+                for (int x = 0; x < numberofCards; x++) {
+
+                        if (!response.body().get(x).quiz ) {
+                            noteCardsList[i] = response.body().get(x).question;
+                            noteCardAnswerList[i] = response.body().get(x).answer;
+                            noteCardsID[i] = response.body().get(x)._id;
+                           i++;
+                        } else {
+                            quizList[quizCount] = response.body().get(x).question;
+                            quizAnswer[quizCount] = response.body().get(x).answer;
+                            while (wrongCCount <= 2) {
+                                wrongChoicesList[count] = response.body().get(x).wrong_choices[wrongCCount];
+                                wrongCCount++;
+                                count++;
+                            }
+                            wrongCCount = 0;
+                            quizCount++;
+                        }
+
+
+                    }
+
+                }
+
+
+            @Override
+            public void onFailure(Call<List<Question>> call, Throwable t) {
+
+            }
+        });
+
+
         Call<List<User>> call = service.getUser();
        call.enqueue(new Callback<List<User>>() {
            @Override
@@ -236,6 +302,8 @@ public class MainActivity extends AppCompatActivity
                   emailList[x] = response.body().get(x).email;
                   passwordList[x] = response.body().get(x).password;
                   currentIDList[x] = response.body().get(x)._id;
+
+
               }
 
 
@@ -246,6 +314,17 @@ public class MainActivity extends AppCompatActivity
 
            }
        });
+
+    }
+    @Override
+    public void SearchInterfaceButtons(String button) {
+        if(button.equals("back")){
+            View frag2 = findViewById(R.id.fragnotecard);
+            frag2.setVisibility(View.VISIBLE);
+            View search = findViewById(R.id.searchPage);
+            search.setVisibility(View.INVISIBLE);
+        }
+
 
     }
     @Override
@@ -270,10 +349,44 @@ public class MainActivity extends AppCompatActivity
                     toolbar.setVisibility(View.VISIBLE);
                     test = true;
                     userNum = x;
+                    Call<List<User>> call = service.getUser();
+                    call.enqueue(new Callback<List<User>>() {
+                        @Override
+                        public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                           bookmarkCount = response.body().get(userNum).bookmark.size();
+                             likedcount  = response.body().get(userNum).likes.size();
+                             dislikescount = response.body().get(userNum).dislikes.size();
+                            for(int x =0; x<bookmarkCount;x++) {
+
+                                    bookmarkList[x] = response.body().get(userNum).bookmark.get(x);
+
+                            }
+
+                            for(int x =0; x<likedcount;x++) {
+
+                                likelist[x] = response.body().get(userNum).likes.get(x);
+
+                            }
+                            for(int x =0; x<dislikescount;x++) {
+
+                                dislikelist[x] = response.body().get(userNum).dislikes.get(x);
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<User>> call, Throwable t) {
+
+                        }
+                    });
+
                     currentID = currentIDList[x];
+                    currentEmail = emailList[x];
+
                     break;
 
                 }else if (!emailList[x].equals(email) && !passwordList[x].equals(password)){
+
                    test = false;
                 }
             }
@@ -294,20 +407,18 @@ public class MainActivity extends AppCompatActivity
             fragfs.setVisibility(View.INVISIBLE);
             View loginScreen = findViewById(R.id.fraglogin);
             loginScreen.setVisibility(View.VISIBLE);
-             View searchbar = findViewById(R.id.action_search);
-            searchbar.setVisibility(View.INVISIBLE);
+
         }else if(button.equals("signBtn")){
             View fragfs = findViewById(R.id.fragfscreen);
             fragfs.setVisibility(View.INVISIBLE);
             View signup = findViewById(R.id.fragsign);
             signup.setVisibility(View.VISIBLE);
-            View searchbar = findViewById(R.id.action_search);
-            searchbar.setVisibility(View.INVISIBLE);
+
         }
     }
     @Override
     public void SignUpButtons(String button,String firstName,String lastName,String email,String password){
-            if(button.equals("allBtn")){
+            if(button.equals("allBtn")) {
                 View loginScreen = findViewById(R.id.fraglogin);
                 loginScreen.setVisibility(View.VISIBLE);
 
@@ -316,8 +427,10 @@ public class MainActivity extends AppCompatActivity
 
             }else if (button.equals("creatBtn")){
                 newUser user = new newUser( firstName,lastName,email,password,0);
-                numOfUsers++;
                 Call<newUser> call = service.createUser(user);
+                numOfUsers = numOfUsers +1;
+                emailList[numOfUsers-1] = email;
+                passwordList[numOfUsers-1] = password;
                 call.enqueue(new Callback<newUser>() {
                     @Override
                     public void onResponse(Call<newUser> call, Response<newUser> response) {
@@ -325,6 +438,7 @@ public class MainActivity extends AppCompatActivity
                         signUp.setVisibility(View.INVISIBLE);
                         View loginScreen = findViewById(R.id.fraglogin);
                         loginScreen.setVisibility(View.VISIBLE);
+
                         Context context = getApplicationContext();
                         CharSequence text = "Congratulations You are JIPA Member Login";
                         int duration = Toast.LENGTH_SHORT;
@@ -346,30 +460,93 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     public void NoteCardInterfaceButtons(String button) {
+
         if (button.equals("answerBtn")) {
-
-            ListView lv = (ListView) findViewById(R.id.question);
-            lv.setVisibility(View.INVISIBLE);
-            ListView a = (ListView) findViewById(R.id.answer);
-            a.setVisibility(View.VISIBLE);
-            Button ans = (Button)findViewById(R.id.answerBtn);
+            TextView lv = (TextView) findViewById(R.id.question);
+            Button ans = (Button) findViewById(R.id.answerBtn);
             ans.setVisibility(View.INVISIBLE);
+            lv.setText(noteCardAnswerList[place]);
+        }else if(button.equals("search")) {
+            View frag2 = findViewById(R.id.fragnotecard);
+            frag2.setVisibility(View.INVISIBLE);
+            View search = findViewById(R.id.searchPage);
+            search.setVisibility(View.VISIBLE);
+            noteSearchList = (ListView) findViewById(R.id.list_view);
+            inputSearch = (EditText) findViewById(R.id.inputSearch);
 
-            listAdapter = new ArrayAdapter<>(this, R.layout.custom_textview);
-           Call<List<Question>> call = service.getQuestion();
-            call.enqueue(new Callback<List<Question>>() {
+            // Adding items to listview
+            adapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.product_name, noteCardsList);
+            noteSearchList.setAdapter(adapter);
+
+
+            inputSearch.addTextChangedListener(new TextWatcher() {
+
                 @Override
-                public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
+                public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                    // When user changed the Text
+                    MainActivity.this.adapter.getFilter().filter(cs);
 
-                    ListView a = (ListView) findViewById(R.id.answer);
-                    a.setAdapter(listAdapter);
-                    listAdapter.addAll(response.body().get(rand).answer);
+
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                              int arg3) {
+
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable arg0) {
+
+                }
+            });
+            noteSearchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parentView, View childView,
+                                        int position, long id) {
+                    TextView lv = (TextView) findViewById(R.id.question);
+                    vib.vibrate(50);
+                    View frag2 = findViewById(R.id.fragnotecard);
+                    frag2.setVisibility(View.VISIBLE);
+                    View search = findViewById(R.id.searchPage);
+                    search.setVisibility(View.INVISIBLE);
+
+                    for(int x = 0; x<198;x++){
+
+                        if(adapter.getItem(position).equals(noteCardsList[x])){
+                            place = x;
+                        }
+
+                    }
+
+
+                    lv.setText(noteCardsList[place]);
                 }
 
 
-                @Override
-                public void onFailure(Call<List<Question>> call, Throwable t) {
+            });
 
+            noteSearchList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                               int pos, long id) {
+                    int position = 0;
+                    for(int x = 0; x<198;x++){
+
+                        if(adapter.getItem(pos).equals(noteCardsList[x])){
+                            position = x;
+                        }
+
+                    }
+                    Context context = getApplicationContext();
+                    CharSequence text = "Question: " + noteCardsList[position] + "\n" + "Answer: " + noteCardAnswerList[position];
+                    int duration = Toast.LENGTH_LONG;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+
+
+                    return true;
                 }
             });
         } else if (button.equals(("backBtn"))) {
@@ -377,124 +554,207 @@ public class MainActivity extends AppCompatActivity
             frag.setVisibility(View.VISIBLE);
             View frag2 = findViewById(R.id.fragnotecard);
             frag2.setVisibility(View.INVISIBLE);
+            infavorites = false;
         } else if (button.equals(("nextBtn"))) {
-            ListView lv = (ListView) findViewById(R.id.question);
-            lv.setVisibility(View.VISIBLE);
-            ListView a = (ListView) findViewById(R.id.answer);
-            a.setVisibility(View.INVISIBLE);
             Button ans = (Button)findViewById(R.id.answerBtn);
             ans.setVisibility(View.VISIBLE);
+            place = rand.nextInt(numcards)+0;
+            TextView lv = (TextView) findViewById(R.id.question);
+           checkButtons();
+            currentQID = noteCardsID[place];
+                lv.setText(noteCardsList[place]);
 
-            rand = ((int)(Math.random() * numcards)) + 1;
-            listAdapter = new ArrayAdapter<>(this, R.layout.custom_textview);
-           Call<List<Question>> call = service.getQuestion();
 
-            call.enqueue(new Callback<List<Question>>() {
-                @Override
-                public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
-
-                    ListView lv = (ListView) findViewById(R.id.question);
-                    lv.setAdapter(listAdapter);
-
-                   listAdapter.addAll(response.body().get(rand).question);
-                }
-
-                @Override
-                public void onFailure(Call<List<Question>> call, Throwable t) {
-
-                }
-            });
         }else if (button.equals("like")){
             vib.vibrate(50);
 
-            Call<likes> call = service.addlike();
-
-            call.enqueue(new Callback<likes>() {
+            Call<Question> call = service.liked(currentQID,currentID,true,false);
+            call.enqueue(new Callback<Question>() {
                 @Override
-                public void onResponse(Call<likes> call, Response<likes> response) {
-
-
+                public void onResponse(Call<Question> call, Response<Question> response) {
+                    Context context = getApplicationContext();
+                    CharSequence text = "check "+ call.request();
+                    int duration = Toast.LENGTH_LONG;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
                 }
 
                 @Override
-                public void onFailure(Call<likes> call, Throwable t) {
+                public void onFailure(Call<Question> call, Throwable t) {
 
                 }
             });
+
         }else if (button.equals("dislike")){
             vib.vibrate(50);
 
-            Call<dislikes> call = service.adddislike();
-
-            call.enqueue(new Callback<dislikes>() {
+            Call<Question> call = service.liked(currentQID, currentID, false, true);
+            call.enqueue(new Callback<Question>() {
                 @Override
-                public void onResponse(Call<dislikes> call, Response<dislikes> response) {
-
-
+                public void onResponse(Call<Question> call, Response<Question> response) {
+                    Context context = getApplicationContext();
+                    CharSequence text = "check ";
+                    int duration = Toast.LENGTH_LONG;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
                 }
 
                 @Override
-                public void onFailure(Call<dislikes> call, Throwable t) {
+                public void onFailure(Call<Question> call, Throwable t) {
 
                 }
             });
+
         }else if (button.equals("fav")){
             vib.vibrate(50);
+             currentQID =  noteCardsID[0];
+            bookmarkCount++;
+           bookmarkList[bookmarkCount] = currentQID;
+
+            FloatingActionButton fav = (FloatingActionButton)findViewById(R.id.fab);
+            if(fav.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.ic_favorite_border_blue_24dp).getConstantState()) {
+
+                Call<Question> call = service.bookmarked(currentQID, currentID, true);
+                call.enqueue(new Callback<Question>() {
+                    @Override
+                    public void onResponse(Call<Question> call, Response<Question> response) {
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Question> call, Throwable t) {
+
+                    }
+                });
+            }
+            else{
+                Call<Question> call = service.bookmarked(currentQID, currentID, false);
+                call.enqueue(new Callback<Question>() {
+                    @Override
+                    public void onResponse(Call<Question> call, Response<Question> response) {
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Question> call, Throwable t) {
+
+                    }
+                });
+            }
+
+
 
 
         }
 
     }
     @Override
+    public void QuizScoreButtons(String button) {
+        if(button.equals("done")){
+            userPoints = userPoints +score;
+            Call<List<User>> call = service.addpoints(userPoints);
+            call.enqueue(new Callback<List<User>>() {
+                @Override
+                public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+
+
+                }
+
+                @Override
+                public void onFailure(Call<List<User>> call, Throwable t) {
+
+                }
+            });
+            View qs = findViewById(R.id.quizScore);
+            qs.setVisibility(View.INVISIBLE);
+            View menu = findViewById(R.id.fragmenu);
+            menu.setVisibility(View.VISIBLE);
+            score = 0;
+        }
+    }
+    @Override
     public void QuizButtons(String button){
+        TextView quiztxt = (TextView)findViewById(R.id.quizQuestion);
+        RadioButton answer = (RadioButton)findViewById(R.id.answer1);
+        RadioButton wrongChoice1 = (RadioButton)findViewById(R.id.answer2);
+        RadioButton wrongChoice2 = (RadioButton)findViewById(R.id.answer3);
+        RadioButton wrongChoice3 = (RadioButton)findViewById(R.id.answer4);
+        RadioGroup group = (RadioGroup)findViewById(R.id.radioGroup);
+
+
+        if(answer.isChecked())
+        {
+            score++;
+        }
+       if(button.equals("nextQuestion")){
+            group.clearCheck();
+            quizCount++;
+            answer.setText(quizAnswer[quizCount]);
+            quiztxt.setText(quizList[quizCount]);
+            wrongCount++;
+            wrongChoice1.setText(wrongChoicesList[wrongCount]);
+            wrongCount++;
+            wrongChoice2.setText(wrongChoicesList[wrongCount]);
+            wrongCount++;
+            wrongChoice3.setText(wrongChoicesList[wrongCount]);
+
+            if(quizCount==9){
+                View qs = findViewById(R.id.quizScore);
+                qs.setVisibility(View.VISIBLE);
+                View frag4 = findViewById(R.id.quizF);
+                frag4.setVisibility(View.INVISIBLE);
+                TextView fScore = (TextView)findViewById(R.id.finalScore);
+                if(score>0){
+                    score++;
+                }
+
+                fScore.setText(score+"/10");
+                quizCount =0;
+                wrongCount = 2;
+                Button next = (Button)findViewById(R.id.nextQuestion);
+                next.setText("Next");
+            }
+            if(quizCount==8)
+            {
+                Button next = (Button)findViewById(R.id.nextQuestion);
+                next.setText("Done");
+
+            }
+
+        }
 
     }
     @Override
     public void HomeInterfaceButtons(String button) {
+        
         if (button.equals("notecard")) {
-            ListView lv = (ListView) findViewById(R.id.question);
-            lv.setVisibility(View.VISIBLE);
-            ListView a = (ListView) findViewById(R.id.answer);
-            a.setVisibility(View.INVISIBLE);
+            TextView tv = (TextView) findViewById(R.id.question);
+            tv.setVisibility(View.VISIBLE);
             View frag = findViewById(R.id.fragmenu);
             frag.setVisibility(View.INVISIBLE);
             View frag2 = findViewById(R.id.fragnotecard);
             frag2.setVisibility(View.VISIBLE);
-            View searchbar = findViewById(R.id.action_search);
-            searchbar.setVisibility(View.VISIBLE);
+            View is = findViewById(R.id.inputSearch);
+            is.setVisibility(View.VISIBLE);
+            View nv = findViewById(R.id.list_view);
+            nv.setVisibility(View.VISIBLE);
+
             Button ans = (Button)findViewById(R.id.answerBtn);
             if (ans.getVisibility() != View.VISIBLE) {
                 ans.setVisibility(View.VISIBLE);
             }
 
-        listAdapter = new ArrayAdapter<>(this,R.layout.custom_textview);
-         Call<List<Question>> call = service.getQuestion();
-
-            call.enqueue(new Callback<List<Question>>() {
-                @Override
-                public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
-
-                    ListView lv = (ListView) findViewById(R.id.question);
-                    lv.setAdapter(listAdapter);
-                    listAdapter.addAll(response.body().get(0));
-
-                    Context context = getApplicationContext();
-                    CharSequence text = response.body().get(rand).question;
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-
+            FloatingActionButton fav = (FloatingActionButton)findViewById(R.id.fab);
+            for(int x = 0; x<bookmarkCount;x++){
+                if(noteCardsID[place].equals(bookmarkList[x])){
+                    fav.setImageResource(R.drawable.ic_favorite_blue_24dp);
+                    break;
                 }
-
-                @Override
-                public void onFailure(Call<List<Question>> call, Throwable t) {
-                    Context context = getApplicationContext();
-                    CharSequence text = "Fail";
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-                }
-            });
+            }
+            currentQID = noteCardsID[place];
+            tv.setText(noteCardsList[place]);
         }else if (button.equals("tips")){
             View menu = findViewById(R.id.fragmenu);
             menu.setVisibility(View.INVISIBLE);
@@ -506,7 +766,6 @@ public class MainActivity extends AppCompatActivity
             detailsText.setVisibility(View.INVISIBLE);
             readTips();
             readDetails();
-
         }else if (button.equals("quiz")){
             View menu = findViewById(R.id.fragmenu);
             menu.setVisibility(View.INVISIBLE);
@@ -516,6 +775,31 @@ public class MainActivity extends AppCompatActivity
             detailsText.setVisibility(View.INVISIBLE);
             View quiz = findViewById(R.id.quizF);
             quiz.setVisibility(View.VISIBLE);
+            TextView quiztxt = (TextView)findViewById(R.id.quizQuestion);
+            RadioButton answer = (RadioButton)findViewById(R.id.answer1);
+            RadioButton wrongChoice1 = (RadioButton)findViewById(R.id.answer2);
+            RadioButton wrongChoice2 = (RadioButton)findViewById(R.id.answer3);
+            RadioButton wrongChoice3 = (RadioButton)findViewById(R.id.answer4);
+            answer.setText(quizAnswer[0]);
+            quiztxt.setText(quizList[0]);
+            wrongChoice1.setText(wrongChoicesList[0]);
+            wrongChoice2.setText(wrongChoicesList[1]);
+            wrongChoice3.setText(wrongChoicesList[2]);
+            Call<List<User>> call = service.getUser();
+            call.enqueue(new Callback<List<User>>() {
+                @Override
+                public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                        userPoints = response.body().get(userNum).points;
+
+                        TextView points = (TextView)findViewById(R.id.points);
+                        points.setText(""+userPoints);
+                }
+
+                @Override
+                public void onFailure(Call<List<User>> call, Throwable t) {
+
+                }
+            });
         }
     }
     @Override
@@ -570,13 +854,14 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+                super.onBackPressed();
         }
     }
 
@@ -584,12 +869,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
 
         return true;
     }
@@ -600,30 +879,78 @@ public class MainActivity extends AppCompatActivity
         View menu = findViewById(R.id.fragmenu);
         View cards = findViewById(R.id.fragnotecard);
         View tips = findViewById(R.id.fragtips);
-       // TextView textl = (TextView)findViewById(R.id.tv);
+        View quiz = findViewById(R.id.quizF);
+        View quizS = findViewById(R.id.quizScore);
+        View searchP= findViewById(R.id.searchPage);
+        TextView textl = (TextView)findViewById(R.id.question);
+        TextView text2 = (TextView)findViewById(R.id.wordPoints);
+        TextView text3 = (TextView)findViewById(R.id.points);
+        TextView text4 = (TextView)findViewById(R.id.quizQuestion);
+        TextView text5 = (TextView)findViewById(R.id.quizS);
+        TextView text6 = (TextView)findViewById(R.id.finalScore);
         TextView texttips = (TextView)findViewById(R.id.tiptxt);
-
+        ImageButton like = (ImageButton)findViewById(R.id.likebtn);
+        ImageButton dislike = (ImageButton)findViewById(R.id.dislikebtn);
+        ImageButton search = (ImageButton)findViewById(R.id.searchbtn);
+        FloatingActionButton fav = (FloatingActionButton)findViewById(R.id.fab);
         if (id == R.id.action_settings) {
             return true;
         }
         if(id == R.id.blackT){
-
+            searchP.setBackgroundColor(Color.parseColor("#222930"));
+            quiz.setBackgroundColor(Color.parseColor("#222930"));
+            quizS.setBackgroundColor(Color.parseColor("#222930"));
             menu.setBackgroundColor(Color.parseColor("#222930"));
             cards.setBackgroundColor(Color.parseColor("#222930"));
             tips.setBackgroundColor(Color.parseColor("#222930"));
-          //  textl.setTextColor(Color.parseColor("#4eb1ba"));
+            textl.setTextColor(Color.parseColor("#4eb1ba"));
+            text2.setTextColor(Color.parseColor("#4eb1ba"));
+            text3.setTextColor(Color.parseColor("#4eb1ba"));
+            text4.setTextColor(Color.parseColor("#4eb1ba"));
+            text5.setTextColor(Color.parseColor("#4eb1ba"));
+            text6.setTextColor(Color.parseColor("#4eb1ba"));
+            like.setBackgroundColor(Color.parseColor("#222930"));
+            dislike.setBackgroundColor(Color.parseColor("#222930"));
+            fav.setBackgroundColor(Color.parseColor("#222930"));
+            search.setBackgroundColor(Color.parseColor("#222930"));
             texttips.setTextColor(Color.parseColor("#4eb1ba"));
         }else if(id == R.id.blueT){
+            searchP.setBackgroundColor(Color.parseColor("#0066ff"));
+            quiz.setBackgroundColor(Color.parseColor("#0066ff"));
+            quizS.setBackgroundColor(Color.parseColor("#0066ff"));
             menu.setBackgroundColor(Color.parseColor("#0066ff"));
             cards.setBackgroundColor(Color.parseColor("#0066ff"));
             tips.setBackgroundColor(Color.parseColor("#0066ff"));
-//            textl.setTextColor(Color.parseColor("#ffffff"));
+            textl.setTextColor(Color.parseColor("#ffffff"));
+            texttips.setTextColor(Color.parseColor("#ffffff"));
+            text2.setTextColor(Color.parseColor("#ffffff"));
+            text3.setTextColor(Color.parseColor("#ffffff"));
+            text4.setTextColor(Color.parseColor("#ffffff"));
+            text5.setTextColor(Color.parseColor("#ffffff"));
+            text6.setTextColor(Color.parseColor("#ffffff"));
+            like.setBackgroundColor(Color.parseColor("#0066ff"));
+            dislike.setBackgroundColor(Color.parseColor("#0066ff"));
+            fav.setBackgroundColor(Color.parseColor("#0066ff"));
+            search.setBackgroundColor(Color.parseColor("#0066ff"));
             texttips.setTextColor(Color.parseColor("#ffffff"));
         }else if(id == R.id.khakiT){
+            searchP.setBackgroundColor(Color.parseColor("#e4dbbf"));
+            quiz.setBackgroundColor(Color.parseColor("#e4dbbf"));
+            quizS.setBackgroundColor(Color.parseColor("#e4dbbf"));
             menu.setBackgroundColor(Color.parseColor("#e4dbbf"));
             cards.setBackgroundColor(Color.parseColor("#e4dbbf"));
             tips.setBackgroundColor(Color.parseColor("#e4dbbf"));
-           // textl.setTextColor(Color.parseColor("#dc5b21"));
+            textl.setTextColor(Color.parseColor("#dc5b21"));
+            texttips.setTextColor(Color.parseColor("#dc5b21"));
+            text2.setTextColor(Color.parseColor("#dc5b21"));
+            text3.setTextColor(Color.parseColor("#dc5b21"));
+            text4.setTextColor(Color.parseColor("#dc5b21"));
+            text5.setTextColor(Color.parseColor("#dc5b21"));
+            text6.setTextColor(Color.parseColor("#dc5b21"));
+            like.setBackgroundColor(Color.parseColor("#e4dbbf"));
+            dislike.setBackgroundColor(Color.parseColor("#e4dbbf"));
+            fav.setBackgroundColor(Color.parseColor("#e4dbbf"));
+            search.setBackgroundColor(Color.parseColor("#e4dbbf"));
             texttips.setTextColor(Color.parseColor("#dc5b21"));
         }else if (id == R.id.logout) {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -652,8 +979,6 @@ public class MainActivity extends AppCompatActivity
             // Get the layout inflater
             LayoutInflater inflater = this.getLayoutInflater();
            // newFeedback feedback = newFeedback
-
-
             final EditText input = new EditText(MainActivity.this);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -715,11 +1040,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.card50) {
             vib.vibrate(50);
             numcards = 50;
-
         } else if (id == R.id.card100) {
             vib.vibrate(50);
             numcards = 100;
@@ -728,7 +1051,7 @@ public class MainActivity extends AppCompatActivity
             numcards = 150;
         } else if (id == R.id.card200) {
             vib.vibrate(50);
-            numcards = 199;
+            numcards = 198;
         } else if (id == R.id.tutorialP) {
             vib.vibrate(50);
             Uri uri = Uri.parse("http://www.tutorialspoint.com/java/");
@@ -739,8 +1062,6 @@ public class MainActivity extends AppCompatActivity
             Uri uri = Uri.parse("https://thenewboston.com/videos.php?cat=31");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
-        }else if (id==R.id.nav_favorites){
-           vib.vibrate(50);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -748,7 +1069,36 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public void checkButtons(){
+        FloatingActionButton fav = (FloatingActionButton)findViewById(R.id.fab);
+        for(int x = 0; x<bookmarkCount;x++){
+            if(noteCardsID[place].equals(bookmarkList[x])){
+                fav.setImageResource(R.drawable.ic_favorite_blue_24dp);
+                break;
+            }else{
+                fav.setImageResource(R.drawable.ic_favorite_border_blue_24dp);
+            }
+        }
+        ImageButton like = (ImageButton)findViewById(R.id.likebtn);
+        for(int x = 0; x<likedcount;x++){
+            if(noteCardsID[place].equals(likelist[x])){
+                like.setImageResource(R.drawable.thumbsupgreen);
+                break;
+            }else{
+                like.setImageResource(R.drawable.thumbsup);
+            }
+        }
 
+        ImageButton dislike = (ImageButton)findViewById(R.id.dislikebtn);
+        for(int x = 0; x<dislikescount;x++){
+            if(noteCardsID[place].equals(dislikelist[x])){
+                dislike.setImageResource(R.drawable.thumbsdownred);
+                break;
+            }else{
+                dislike.setImageResource(R.drawable.thumbsdown);
+            }
+        }
+    }
     public void readDetails(){
         InputStream iStream = getResources().openRawResource(R.raw.details);
         BufferedReader bReader = new BufferedReader (new InputStreamReader(iStream));
@@ -756,16 +1106,10 @@ public class MainActivity extends AppCompatActivity
         detailsTxtLines= new ArrayList<String>();
         finalStringDetails = new StringBuilder();
         String line = null;
-        StringTokenizer st;
-        String  token, delimiter = "1.2.3.4.5.6.7.8.9.10.";
+
+
         try {
             while((line = bReader.readLine()) != null) {
-                st = new StringTokenizer(line,delimiter);
-                while (st.hasMoreTokens())
-                {
-                    token = st.nextToken();
-
-                }
                 detailsTxtLines.add(line);
             }
         } catch (IOException e) {
@@ -785,7 +1129,7 @@ public class MainActivity extends AppCompatActivity
         finalStringTips = new StringBuilder();
         String line = null;
         try {
-            while((line = bReader.readLine()) != null) {
+            while ((line = bReader.readLine()) != null) {
                 tipsTxtLines.add(line);
             }
         } catch (IOException e) {
@@ -796,4 +1140,33 @@ public class MainActivity extends AppCompatActivity
         finalStringTips.append(tipsTxtLines.get(index));
         tipsText.setText(finalStringTips);
     }
+
+    public void hideAllScreens(){
+        View qs = findViewById(R.id.quizScore);
+        qs.setVisibility(View.INVISIBLE);
+
+        View noteCard = findViewById(R.id.fragnotecard);
+        noteCard.setVisibility(View.INVISIBLE);
+
+        View menu = findViewById(R.id.fragmenu);
+       menu.setVisibility(View.INVISIBLE);
+
+        View tips = findViewById(R.id.fragtips);
+        tips.setVisibility(View.INVISIBLE);
+
+        View loginScreen = findViewById(R.id.fraglogin);
+        loginScreen.setVisibility(View.INVISIBLE);
+
+        View signUp = findViewById(R.id.fragsign);
+        signUp.setVisibility(View.INVISIBLE);
+
+        View quiz = findViewById(R.id.quizF);
+        quiz.setVisibility(View.INVISIBLE);
+
+        View search = findViewById(R.id.searchPage);
+        search.setVisibility(View.INVISIBLE);
+
+    }
+
+
 }

@@ -9,20 +9,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 /**
- * Created by tonio on 3/28/2016.
+ * Created by tonio on 4/11/2016.
  */
-public class QuizScreen extends Fragment {
-    private QuizListener activityCommander;
+public class SearchInterface extends Fragment {
+    private SearchListener activityCommander;
 
-    public interface QuizListener {
-        public void QuizButtons(String button);
+    public interface SearchListener {
+        public void SearchInterfaceButtons(String button);
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            activityCommander = (QuizListener) activity;
+            activityCommander = (SearchListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString());
         }
@@ -31,22 +31,20 @@ public class QuizScreen extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.quiz, container, false);
+        View v = inflater.inflate(R.layout.search_interface, container, false);
 
-        Button nextQuestion = (Button)v.findViewById(R.id.nextQuestion);
+        Button Back = (Button)v.findViewById(R.id.bckSearch);
 
 
-
-        nextQuestion.setOnClickListener(
+        Back.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
+                        activityCommander.SearchInterfaceButtons("back");
 
-
-                        activityCommander.QuizButtons("nextQuestion");
                     }
                 }
         );
 
-        return v;
+        return  v;
     }
 }
