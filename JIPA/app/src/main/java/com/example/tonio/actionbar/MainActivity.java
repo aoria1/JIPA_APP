@@ -74,11 +74,10 @@ public class MainActivity extends AppCompatActivity
     private TextView tipsText;
     private TextView detailsText;
     private static ArrayList<String> detailsTxtLines;
-    private boolean infavorites = false;
     private int index;
     private int bookmarkCount;
-    int likedcount;
-    int dislikescount;
+    private int likedcount;
+    private int dislikescount;
     private int numOfUsers;
     private EditText inputSearch;
     private ListView noteSearchList;
@@ -107,10 +106,6 @@ public class MainActivity extends AppCompatActivity
             .build();
 
    private  final  GitHubService service = retrofit.create(GitHubService.class);
-
-
-
-
     private  class newUser{
 
         private String firstname;
@@ -202,8 +197,8 @@ public class MainActivity extends AppCompatActivity
         Call<List<User>> getUser();
 
         @FormUrlEncoded
-        @POST("api/user")
-        Call<List<User>> addpoints(@Field("points")int points);
+        @POST("api/user/{id}/points")
+        Call<List<User>> addpoints(@Path("id")String userID,@Field("points")int points);
 
         @FormUrlEncoded
         @POST("api/question/{id}/bookmark")
@@ -554,7 +549,7 @@ public class MainActivity extends AppCompatActivity
             frag.setVisibility(View.VISIBLE);
             View frag2 = findViewById(R.id.fragnotecard);
             frag2.setVisibility(View.INVISIBLE);
-            infavorites = false;
+
         } else if (button.equals(("nextBtn"))) {
             Button ans = (Button)findViewById(R.id.answerBtn);
             ans.setVisibility(View.VISIBLE);
@@ -683,8 +678,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void QuizScoreButtons(String button) {
         if(button.equals("done")){
-            userPoints = userPoints +score;
-            Call<List<User>> call = service.addpoints(userPoints);
+            userPoints = score;
+            Call<List<User>> call = service.addpoints(currentID, userPoints);
             call.enqueue(new Callback<List<User>>() {
                 @Override
                 public void onResponse(Call<List<User>> call, Response<List<User>> response) {
@@ -766,10 +761,7 @@ public class MainActivity extends AppCompatActivity
             frag.setVisibility(View.INVISIBLE);
             View frag2 = findViewById(R.id.fragnotecard);
             frag2.setVisibility(View.VISIBLE);
-            View is = findViewById(R.id.inputSearch);
-            is.setVisibility(View.VISIBLE);
-            View nv = findViewById(R.id.list_view);
-            nv.setVisibility(View.VISIBLE);
+
 
             Button ans = (Button)findViewById(R.id.answerBtn);
             if (ans.getVisibility() != View.VISIBLE) {

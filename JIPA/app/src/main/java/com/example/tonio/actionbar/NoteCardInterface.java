@@ -44,7 +44,7 @@ public class NoteCardInterface extends Fragment {
 
             View v = inflater.inflate(R.layout.notecard, container, false);
             Button answer = (Button)v.findViewById(R.id.answerBtn);
-            Button back = (Button)v.findViewById(R.id.backBtn);
+            Button back = (Button)v.findViewById(R.id.backBtnN);
             Button next = (Button)v.findViewById(R.id.nextqBtn);
              like = (ImageButton)v.findViewById(R.id.likebtn);
             dislike = (ImageButton)v.findViewById(R.id.dislikebtn);
@@ -117,7 +117,10 @@ public class NoteCardInterface extends Fragment {
             back.setOnClickListener(
                     new View.OnClickListener() {
                         public void onClick(View v) {
-                            activityCommander.NoteCardInterfaceButtons("backBtn,",0);
+                            activityCommander.NoteCardInterfaceButtons("backBtn" +
+                                    "" +
+                                    "" +
+                                    "",0);
 
                         }
                     }
